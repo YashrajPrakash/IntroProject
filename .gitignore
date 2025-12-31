@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# OS files
+.DS_Store
+Thumbs.db
