@@ -10,6 +10,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,13 +25,13 @@ public class EmployeeService {
     }
 
 
-    public EmployeeDTO getEmployeeById(Long id) {
-        EmployeeEntity employeeEntity = employeeRepository.findById(id).orElse(null);
+    public Optional<EmployeeDTO> getEmployeeById(Long id) {
+//        Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(id);
 //        ModelMapper mapper = new ModelMapper();  // BAD WAY -> let's do it in spring way.
 
 //      new EmployeeDTO(employeeEntity.getId(),employeeEntity.getName(),); // This will create problem as we have to do it for evey other method and every other entity.
 
-        return modelMapper.map(employeeEntity,EmployeeDTO.class);
+        return employeeRepository.findById(id).map(employeeEntity1 -> modelMapper.map(employeeEntity1, EmployeeDTO.class));
     }
 
     public List<EmployeeDTO> getAllEmployees() {
