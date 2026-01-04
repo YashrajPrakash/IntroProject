@@ -2,6 +2,7 @@ package com.letsGo.me.learningSB.services;
 
 import com.letsGo.me.learningSB.dto.EmployeeDTO;
 import com.letsGo.me.learningSB.entities.EmployeeEntity;
+import com.letsGo.me.learningSB.exceptions.ResourceNotFoundException;
 import com.letsGo.me.learningSB.repositories.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -86,20 +87,19 @@ public class EmployeeService {
 
     }
 
-    public boolean isExistsByEmployeeId(Long employeeId){
-        return  employeeRepository.existsById(employeeId);
+    public void isExistsByEmployeeId(Long employeeId){
+        boolean exists = employeeRepository.existsById(employeeId);
+        if(!exists) throw new ResourceNotFoundException("Employee not found with id: "+ employeeId);
     }
 
     public boolean deleteEmployeeById(Long employeeId) {
-        boolean exists = employeeRepository.existsById(employeeId);
-        if(!exists) return false;
+        isExistsByEmployeeId(employeeId);
         employeeRepository.deleteById(employeeId);
         return true;
     }
 
     public EmployeeDTO updatePartialEmployeeById(Long employeeId, Map<String, Object> updates) {
-        boolean exists = isExistsByEmployeeId(employeeId);
-        if(!exists) return null;
+        isExistsByEmployeeId(employeeId);
         EmployeeEntity employeeEntity = employeeRepository.findById(employeeId).get();
         updates.forEach((field,value)->{
             Field fieldToBeUpdated = ReflectionUtils.findField(EmployeeEntity.class,field);

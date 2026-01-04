@@ -2,6 +2,7 @@ package com.letsGo.me.learningSB.controllers;
 
 import com.letsGo.me.learningSB.dto.EmployeeDTO;
 import com.letsGo.me.learningSB.entities.EmployeeEntity;
+import com.letsGo.me.learningSB.exceptions.ResourceNotFoundException;
 import com.letsGo.me.learningSB.repositories.EmployeeRepository;
 import com.letsGo.me.learningSB.services.EmployeeService;
 import jakarta.validation.Valid;
@@ -36,7 +37,7 @@ public class EmployeeController {
         Optional<EmployeeDTO> employeeDTO = employeeService.getEmployeeById(id);
         return employeeDTO
                 .map(employeeDTO1 -> ResponseEntity.ok(employeeDTO1))
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: "+ id) );
     }
 
     @GetMapping()
